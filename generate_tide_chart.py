@@ -83,8 +83,10 @@ def generate_dashboard():
     plt.title(f"Westfield Tidal Predictions — {tomorrow.strftime('%A, %B %d, %Y')}", fontsize=14, pad=15, weight='bold')
     plt.ylabel("Water Height (m)")
     
-    # Start the Y-axis exactly at 0.2 meters
-    plt.ylim(bottom=0.2)
+    # --- CHANGED: Dynamic Y-Axis Limits with 0.1m Buffer ---
+    y_min = min(heights) - 0.1
+    y_max = max(heights) + 0.1
+    plt.ylim(y_min, y_max)
     
     ax = plt.gca()
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%I:%M %p'))
@@ -99,11 +101,11 @@ def generate_dashboard():
     plt.savefig(graph_path, dpi=150)
     plt.close()
 
-    # Build the final index page without the top text boxes
+    # Build the final index page
     html_content = f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>Westfield固定潮汐图表</title>
+    <title>Westfield Tide Dashboard</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -138,7 +140,7 @@ def generate_dashboard():
 """
     with open("index.html", "w") as f:
         f.write(html_content)
-    print("Dashboard streamlined successfully!")
+    print("Dashboard updated with dynamic Y-axis scaling!")
 
 if __name__ == "__main__":
     generate_dashboard()
